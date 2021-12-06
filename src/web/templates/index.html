@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <style>
+        body {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: auto;
+            max-width: 680px;
+            padding: 0 15px;
+        }
+
+        .footer {
+            background-color: #f5f5f5;
+        }
+    </style>
+
+    <title>おみくじ</title>
+</head>
+
+<body class="d-flex flex-column h-100 center">
+
+    <main role="main" class="flex-shrink-0">
+        <div class="container">
+            <h1 class="mt-5">おみくじ</h1>
+            <form action="#">
+                <div class="form-group">
+                    <select class="custom-select d-block w-100" id="omikuji-type" class="form-control" required>
+                        <option value="">選択してください</option>
+                        <option value="red">赤いおみくじ</option>
+                        <option value="blue">青いおみくじ</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary btn-lg btn-block" type="submit" id="omikuji-submit">おみくじを引く</button>
+            </form>
+
+            <h1 class="mt-3 mx-auto">
+                <div class="d-flex align-items-center justify-content-center" id="omikuji-result">
+                    結果
+                </div>
+            </h1>
+
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <!-- span class="text-muted">フッターのコンテンツをここに置きます．</span -->
+        </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+        $("#omikuji-submit").on('click', function () {
+            // フォームデータ
+            const fd = {
+                "type": $("#omikuji-type").val()
+            };
+            if (fd["type"] == "") return
+            console.log(fd);
+
+            // メッセージ
+            const result_field = $("#omikuji-result");
+            result_field.html("カラカラ");
+
+            $.post("/omikuji", fd)
+                .done(function (data) {
+                    console.log(data);
+                    result_field.html(data);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR.status + " " + textStatus + " " + errorThrown);
+                    result_field.html("サーバエラー");
+                });
+
+        });
+    </script>
+</body>
+
+</html>
